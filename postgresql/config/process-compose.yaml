@@ -1,0 +1,24 @@
+version: "0.5"
+
+processes:
+  # Override the base postgresql package's service to add a readiness probe.
+  postgresql:
+    command: "sh -c 'exec postgres -k \"$PGHOST\" -p \"${PGPORT:-5432}\"'"
+    is_daemon: false
+    shutdown:
+      command: "pg_ctl stop -m fast"
+    availability:
+      restart: "always"
+    readiness_probe:
+      exec:
+        command: "pg_isready -h \"$PGHOST\" -p \"${PGPORT:-5432}\""
+      initial_delay_seconds: 1
+      period_seconds: 2
+      timeout_seconds: 3
+
+  # Runs once postgresql is healthy: creates configured roles/databases.
+  postgresql:createdb:
+    command: "bash \"$POSTGRESQL_SCRIPTS_DIR/create_db.sh\""
+    depends_on:
+      postgresql:
+        condition: process_healthy

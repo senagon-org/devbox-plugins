@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/main/.schema/devbox-plugin.schema.json",
+  "name": "postgresql",
+  "version": "0.1.0",
+  "description": "Configurable PostgreSQL auto-init, database/role bootstrap, and health-checked devbox service. Configure via PGUSER, POSTGRES_AUTH_METHOD, POSTGRES_PASSWORD, POSTGRES_INITDB_ARGS, POSTGRES_DATABASES, POSTGRES_ROLES in your project's devbox.json env — see README.md.",
+  "env": {
+    "PGUSER": "postgres",
+    "POSTGRES_AUTH_METHOD": "trust",
+    "POSTGRESQL_SCRIPTS_DIR": "{{ .Virtenv }}"
+  },
+  "create_files": {
+    "{{ .Virtenv }}/init_db.sh": "config/init_db.sh",
+    "{{ .Virtenv }}/create_db.sh": "config/create_db.sh",
+    "{{ .Virtenv }}/process-compose.yaml": "config/process-compose.yaml"
+  },
+  "shell": {
+    "init_hook": [
+      "bash {{ .Virtenv }}/init_db.sh"
+    ]
+  }
+}
