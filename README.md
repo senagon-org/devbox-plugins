@@ -30,6 +30,8 @@ Unlike [networkteam/devbox-plugins](https://github.com/networkteam/devbox-plugin
 
 | Env var                   | Default    | Description                                                                                     |
 |----------------------------|------------|---------------------------------------------------------------------------------------------------|
+| `DB_HOST`                 | _(alias)_  | Mirrors `PGHOST`. Read-only — set by the plugin, not by you.                                      |
+| `DB_PORT`                 | `5432`     | Mirrors `PGPORT`. Read-only — set by the plugin, not by you.                                      |
 | `PGUSER`                  | `postgres` | Name of the superuser role created by `initdb`.                                                  |
 | `POSTGRES_AUTH_METHOD`    | `trust`    | `initdb --auth` value (`trust`, `md5`, `scram-sha-256`, ...). Non-`trust` methods require `POSTGRES_PASSWORD`. |
 | `POSTGRES_PASSWORD`       | _(unset)_  | Password for `PGUSER`, set via `initdb --pwfile`. Required when `POSTGRES_AUTH_METHOD` isn't `trust`. |
