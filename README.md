@@ -10,8 +10,6 @@ Extends devbox's built-in `postgresql` package with:
 - a health-checked `devbox services` process (`pg_isready` readiness probe, so dependents don't race a not-yet-initialized or not-yet-started server)
 - automatic role/database creation once the server is healthy
 
-Unlike [networkteam/devbox-plugins](https://github.com/networkteam/devbox-plugins), every behavior is configurable via env vars set in your project's `devbox.json` — no forking required.
-
 ### Usage
 
 ```json
