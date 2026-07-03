@@ -14,11 +14,10 @@ db_name="${DB_NAME:-}"
 
 set_count=0
 [ -n "$db_user" ] && set_count=$((set_count + 1))
-[ -n "$db_password" ] && set_count=$((set_count + 1))
 [ -n "$db_name" ] && set_count=$((set_count + 1))
 
-if [ "$set_count" -gt 0 ] && [ "$set_count" -lt 3 ]; then
-  echo "postgresql plugin: DB_USER, DB_PASSWORD, and DB_NAME must all be set together (currently set: ${db_user:+DB_USER }${db_password:+DB_PASSWORD }${db_name:+DB_NAME})" >&2
+if [ "$set_count" -eq 1 ]; then
+  echo "postgresql plugin: DB_USER and DB_NAME must both be set together (currently set: ${db_user:+DB_USER }${db_name:+DB_NAME})" >&2
   exit 1
 fi
 
@@ -42,7 +41,11 @@ if [ -n "$db_user" ]; then
   exists="$(psql_c -tAc "SELECT 1 FROM pg_roles WHERE rolname = '${db_user}'")"
   if [ "$exists" != "1" ]; then
     echo "postgresql plugin: creating role ${db_user}"
-    psql_c -c "CREATE ROLE \"${db_user}\" LOGIN PASSWORD '${db_password}'"
+    if [ -n "$db_password" ]; then
+      psql_c -c "CREATE ROLE \"${db_user}\" LOGIN PASSWORD '${db_password}'"
+    else
+      psql_c -c "CREATE ROLE \"${db_user}\" LOGIN"
+    fi
   fi
 fi
 
