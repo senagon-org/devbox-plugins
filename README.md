@@ -18,7 +18,7 @@ Extends devbox's built-in `postgresql` package with:
   "include": ["github:senagon/devbox-plugins?dir=postgresql"],
   "env": {
     "PGUSER": "postgres",
-    "POSTGRES_DATABASES": "railbase",
+    "ADDITIONAL_DATABASES": "railbase",
     "POSTGRES_AUTH_METHOD": "trust"
   }
 }
@@ -28,12 +28,17 @@ Extends devbox's built-in `postgresql` package with:
 
 | Env var                   | Default    | Description                                                                                     |
 |----------------------------|------------|---------------------------------------------------------------------------------------------------|
+| `DB_HOST`                 | _(alias)_  | Mirrors `PGHOST`. Read-only — set by the plugin, not by you.                                      |
+| `DB_PORT`                 | `5432`     | Mirrors `PGPORT`. Read-only — set by the plugin, not by you.                                      |
 | `PGUSER`                  | `postgres` | Name of the superuser role created by `initdb`.                                                  |
 | `POSTGRES_AUTH_METHOD`    | `trust`    | `initdb --auth` value (`trust`, `md5`, `scram-sha-256`, ...). Non-`trust` methods require `POSTGRES_PASSWORD`. |
 | `POSTGRES_PASSWORD`       | _(unset)_  | Password for `PGUSER`, set via `initdb --pwfile`. Required when `POSTGRES_AUTH_METHOD` isn't `trust`. |
 | `POSTGRES_INITDB_ARGS`    | _(unset)_  | Extra flags appended to `initdb`, e.g. `--locale=C --encoding=UTF8`. Word-split, so quote per-flag as needed. |
-| `POSTGRES_DATABASES`      | _(unset)_  | Space-separated list of databases to create if missing, once the server is healthy.              |
+| `ADDITIONAL_DATABASES`    | _(unset)_  | Space-separated list of extra databases to create if missing, once the server is healthy. Owned by `PGUSER`. |
 | `POSTGRES_ROLES`          | _(unset)_  | Space-separated list of extra roles to create if missing, as `name` or `name:password`.          |
+| `DB_USER`                 | _(unset)_  | Name of the app's primary role, created if missing. Must be set together with `DB_PASSWORD` and `DB_NAME`.  |
+| `DB_PASSWORD`             | _(unset)_  | Password for `DB_USER`. Must be set together with `DB_USER` and `DB_NAME`.                        |
+| `DB_NAME`                 | _(unset)_  | App's primary database, created if missing with `OWNER` set to `DB_USER`. Must be set together with `DB_USER` and `DB_PASSWORD`. |
 
 `PGDATA`, `PGHOST`, and `PGPORT` come from devbox's base `postgresql` package — this plugin only reads them, it doesn't set them.
 
